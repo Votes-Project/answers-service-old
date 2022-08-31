@@ -1,23 +1,16 @@
-# Getting Started with [Fastify-CLI](https://www.npmjs.com/package/fastify-cli)
-This project was bootstrapped with Fastify-CLI.
+# Fastify Example
 
-## Available Scripts
+This example starts a [Fastify](https://www.fastify.io/) server.
 
-In the project directory, you can run:
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/ZZ50Bj)
 
-### `npm run dev`
+## ✨ Features
 
-To start the app in dev mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- Fastify
+- TypeScript
 
-### `npm start`
+## 💁‍♀️ How to use
 
-For production mode
-
-### `npm run test`
-
-Run the test cases.
-
-## Learn More
-
-To learn Fastify, check out the [Fastify documentation](https://www.fastify.io/docs/latest/).
+- Install dependencies `npm install`
+- Connect to your Railway project `railway link`
+- Start the development server `railway run npm run dev`
