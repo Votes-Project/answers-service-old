@@ -1,0 +1,17 @@
+// Bun Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`fetching data fetching answers 1`] = `"[]"`;
+
+exports[`run unused selections CLI 1`] = `
+"Analyzing project... (this might take a while)
+
+[31m✘[0m Found 4 unused selections.
+
+File "Answers":
+   In query "AllAnswers":
+    - user: context_id
+    - id
+    - answer_num_by_user
+    - user
+"
+`;
