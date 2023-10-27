@@ -9,11 +9,17 @@ function allAnswers(client) {
 
 var addAnswer = Answers__edgeql.AddAnswer.transaction;
 
+var removeAnswer = Answers__edgeql.RemoveAnswer.transaction;
+
 var AddAnswer;
+
+var RemoveAnswer;
 
 export {
   allAnswers ,
   AddAnswer ,
   addAnswer ,
+  RemoveAnswer ,
+  removeAnswer ,
 }
 /* Answers__edgeql Not a pure module */

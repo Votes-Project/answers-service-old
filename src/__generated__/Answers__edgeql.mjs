@@ -2,7 +2,7 @@
 
 import * as EdgeDB from "rescript-edgedb/src/EdgeDB.mjs";
 
-var queryText = "# @name allAnswers\n      select Answer {\n        id,\n        answer_num_by_user,\n        user: {\n          context_id\n        }\n      } order by .answer_num_by_user;";
+var queryText = "# @name allAnswers\n      select Answer {\n        id,\n        answer_num_by_voter,\n        voter: {\n          context_id\n        }\n      } order by .answer_num_by_voter;";
 
 function query(client) {
   return EdgeDB.QueryHelpers.many(client, queryText, undefined);
@@ -18,7 +18,7 @@ var AllAnswers = {
   transaction: transaction
 };
 
-var queryText$1 = "# @name AddAnswer\n      insert Answer {\n          answer_num_by_user := <int16>$answer_num_by_user,\n          day := <str>$day,\n          user := (\n              select Account filter .context_id = <str>$context_id\n          ),\n          option := (\n              select Option filter .id = <uuid>$id\n          )\n      }";
+var queryText$1 = "# @name AddAnswer\n      insert Answer {\n          answer_num_by_voter := <int16>$answer_num_by_voter,\n          day := <str>$day,\n          voter := (\n              select Account filter .id = <uuid>$voter_id\n          ),\n          option := (\n              select Option filter .id = <uuid>$option_id\n          )\n      }";
 
 function query$1(client, args) {
   return EdgeDB.QueryHelpers.singleRequired(client, queryText$1, args);
@@ -34,8 +34,25 @@ var AddAnswer = {
   transaction: transaction$1
 };
 
+var queryText$2 = "# @name RemoveAnswer\n      delete Answer\n      filter .id = <uuid>$id";
+
+function query$2(client, args, onError) {
+  return EdgeDB.QueryHelpers.single(client, queryText$2, args, onError);
+}
+
+function transaction$2(transaction$3, args, onError) {
+  return EdgeDB.TransactionHelpers.single(transaction$3, queryText$2, args, onError);
+}
+
+var RemoveAnswer = {
+  queryText: queryText$2,
+  query: query$2,
+  transaction: transaction$2
+};
+
 export {
   AllAnswers ,
   AddAnswer ,
+  RemoveAnswer ,
 }
 /* EdgeDB Not a pure module */
