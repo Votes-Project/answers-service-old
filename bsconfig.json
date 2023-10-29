@@ -7,6 +7,10 @@
       "subdirs": true
     },
     {
+      "dir": "db",
+      "subdirs": true
+    },
+    {
       "dir": "test",
       "type": "dev"
     }
