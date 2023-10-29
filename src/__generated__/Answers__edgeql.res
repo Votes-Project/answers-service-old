@@ -1,4 +1,4 @@
-// @sourceHash fd7d72e1550005e9e429a35626ef142f
+// @sourceHash d43fb93ea5ff03d2243aa42bd7fcd076
 
 module AllAnswers = {
   let queryText = `# @name allAnswers
@@ -33,7 +33,7 @@ module AddAnswer = {
   let queryText = `# @name AddAnswer
       insert Answer {
           answer_num_by_voter := <int16>$answer_num_by_voter,
-          day := <str>$day,
+          day := <datetime>$day,
           voter := (
               select Account filter .id = <uuid>$voter_id
           ),
@@ -44,7 +44,7 @@ module AddAnswer = {
   
     type args = {
       answer_num_by_voter: int,
-      day: string,
+      day: Date.t,
       voter_id: string,
       option_id: string,
     }

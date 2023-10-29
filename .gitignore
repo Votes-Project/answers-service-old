@@ -28,3 +28,5 @@ lib/bs
 lib
 .yarn/cache
 .env
+
+*.mjs
