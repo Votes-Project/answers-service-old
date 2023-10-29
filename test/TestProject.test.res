@@ -164,7 +164,7 @@ describe("add and remove", () => {
       async transaction => {
         await transaction->Answers.addAnswer({
           answer_num_by_voter: 0,
-          day: "0",
+          day: Date.now()->Date.fromTime,
           voter_id: voterId,
           option_id: optionId,
         })

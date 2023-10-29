@@ -16,7 +16,7 @@ module AddAnswer = %edgeql(`
     # @name AddAnswer
     insert Answer {
         answer_num_by_voter := <int16>$answer_num_by_voter,
-        day := <str>$day,
+        day := <datetime>$day,
         voter := (
             select Account filter .id = <uuid>$voter_id
         ),

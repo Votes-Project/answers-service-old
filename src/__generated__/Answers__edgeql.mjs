@@ -18,7 +18,7 @@ var AllAnswers = {
   transaction: transaction
 };
 
-var queryText$1 = "# @name AddAnswer\n      insert Answer {\n          answer_num_by_voter := <int16>$answer_num_by_voter,\n          day := <str>$day,\n          voter := (\n              select Account filter .id = <uuid>$voter_id\n          ),\n          option := (\n              select Option filter .id = <uuid>$option_id\n          )\n      }";
+var queryText$1 = "# @name AddAnswer\n      insert Answer {\n          answer_num_by_voter := <int16>$answer_num_by_voter,\n          day := <datetime>$day,\n          voter := (\n              select Account filter .id = <uuid>$voter_id\n          ),\n          option := (\n              select Option filter .id = <uuid>$option_id\n          )\n      }";
 
 function query$1(client, args) {
   return EdgeDB.QueryHelpers.singleRequired(client, queryText$1, args);
