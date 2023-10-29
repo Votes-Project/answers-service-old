@@ -1,9 +1,10 @@
+using extension graphql;
 module default {
   scalar type AddPointsReason extending enum<Answer, GitcoinDonation>;
   scalar type QueueId extending sequence;
 
   type AddPoints {
-    required amount -> str;
+    required amount -> bigint;
     required property reason -> AddPointsReason;
   }
 
@@ -11,8 +12,8 @@ module default {
     required property context_id -> str {
        constraint exclusive;
     };
-    required property points -> str {
-      default := "0";
+    required property points -> bigint {
+      default := 0;
     };
     multi point_events -> AddPoints {
       constraint exclusive;
@@ -20,7 +21,7 @@ module default {
   }
 
   type Question {
-    property day -> str;
+    property day -> datetime;
     required property question -> str;
     index on ((.day, .question));
   }
@@ -48,7 +49,7 @@ module default {
 
   type Raffle {
     required property cycle -> int32;
-    required property num_points -> str;
+    required property num_points -> bigint;
     required property winner -> str;
     index on (.cycle);
   }
@@ -71,7 +72,7 @@ module default {
     required property answer_num_by_voter -> int16 {
       default := 0;
     };
-    required property day -> str;
+    required property day -> datetime;
     required single link voter -> Account;
     required single link option -> Option;
     index on ((.id, .answer_num_by_voter));

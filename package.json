@@ -8,10 +8,10 @@
     "start": "fastify start -l info src/app.mjs",
     "dev": "yarn build && concurrently -k -p \"[{name}]\" -n \"Rescript,App\" -c \"yellow.bold,cyan.bold\" \"yarn watch:res\" \"yarn dev:start\"",
     "dev:start": "fastify start -w -l info -P src/app.mjs",
-    "build": "npm run build:edgedb && npm run build:res",
+    "build": "yarn run build:edgedb && npm run build:res",
     "build:res": "rescript build",
     "watch:res": "rescript build -w",
-    "build:edgedb": "rescript-edgedb generate --output ./db/__generated__ --src ./db",
+    "build:edgedb": "rescript-edgedb generate --output ./src/__generated__ --src ./src",
     "watch:edgedb": "npm run build:edgedb -- --watch"
   },
   "keywords": [],
