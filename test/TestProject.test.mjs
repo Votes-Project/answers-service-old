@@ -2,9 +2,12 @@
 
 import * as Edgedb from "edgedb";
 import * as Answers from "../src/Answers.mjs";
+import * as Options from "../src/Options.mjs";
 import * as Accounts from "../src/Accounts.mjs";
 import * as Buntest from "bun:test";
+import * as Questions from "../src/Questions.mjs";
 import * as Core__Option from "@rescript/core/src/Core__Option.mjs";
+import * as Core__Result from "@rescript/core/src/Core__Result.mjs";
 
 var client = Edgedb.createClient(undefined);
 
@@ -26,7 +29,10 @@ Buntest.describe("fetching data", (function () {
                 var answers$1 = Core__Option.getWithDefault(JSON.stringify(answers, removeIds, 2), "");
                 Buntest.expect(answers$1).toMatchSnapshot();
               }));
-        Buntest.test("running in a transaction", (async function () {
+      }));
+
+Buntest.describe("add and remove", (function () {
+        Buntest.test("add and remove account transaction", (async function () {
                 var res = await client.transaction(async function (transaction) {
                       return await Accounts.addAccount(transaction, {
                                   context_id: "0"
@@ -46,6 +52,124 @@ Buntest.describe("fetching data", (function () {
                 }
                 Buntest.expect(tmp).toBe(true);
               }));
+        Buntest.test("add and remove question", (async function () {
+                var res = await client.transaction(async function (transaction) {
+                      return await Questions.addQuestion(transaction, {
+                                  question: "What is the meaning of life?"
+                                });
+                    });
+                var tmp;
+                if (res.TAG === "Ok") {
+                  var id = res._0.id;
+                  await client.transaction(async function (transaction) {
+                        return await Questions.removeQuestion(transaction, {
+                                    id: id
+                                  }, undefined);
+                      });
+                  tmp = id.length > 2;
+                } else {
+                  tmp = false;
+                }
+                Buntest.expect(tmp).toBe(true);
+              }));
+        Buntest.test("add and remove option", (async function () {
+                var questionId = Core__Result.mapWithDefault(await client.transaction(async function (transaction) {
+                          return await Questions.addQuestion(transaction, {
+                                      question: "What is the meaning of life?"
+                                    });
+                        }), "", (function (param) {
+                        return param.id;
+                      }));
+                var res = await client.transaction(async function (transaction) {
+                      return await Options.addOption(transaction, {
+                                  option: "42",
+                                  question_id: questionId
+                                });
+                    });
+                var tmp;
+                if (res.TAG === "Ok") {
+                  var id = res._0.id;
+                  await client.transaction(async function (transaction) {
+                        return [
+                                await Options.removeOption(transaction, {
+                                      id: id
+                                    }, undefined),
+                                await Questions.removeQuestion(transaction, {
+                                      id: questionId
+                                    }, undefined)
+                              ];
+                      });
+                  tmp = id.length > 2;
+                } else {
+                  tmp = false;
+                }
+                Buntest.expect(tmp).toBe(true);
+              }));
+        Buntest.test("add and remove answer", (async function () {
+                var voterId = Core__Result.mapWithDefault(await client.transaction(async function (transaction) {
+                          return await Accounts.addAccount(transaction, {
+                                      context_id: "0"
+                                    });
+                        }), "", (function (param) {
+                        return param.id;
+                      }));
+                var questionId = Core__Result.mapWithDefault(await client.transaction(async function (transaction) {
+                          return await Questions.addQuestion(transaction, {
+                                      question: "What is the meaning of life?"
+                                    });
+                        }), "", (function (param) {
+                        return param.id;
+                      }));
+                var optionId = Core__Result.mapWithDefault(await client.transaction(async function (transaction) {
+                          return await Options.addOption(transaction, {
+                                      option: "42",
+                                      question_id: questionId
+                                    });
+                        }), "", (function (param) {
+                        return param.id;
+                      }));
+                var res = await client.transaction(async function (transaction) {
+                      return await Answers.addAnswer(transaction, {
+                                  answer_num_by_voter: 0,
+                                  day: "0",
+                                  voter_id: voterId,
+                                  option_id: optionId
+                                });
+                    });
+                var tmp;
+                if (res.TAG === "Ok") {
+                  var id = res._0.id;
+                  await client.transaction(async function (transaction) {
+                        return [
+                                await Answers.removeAnswer(transaction, {
+                                      id: id
+                                    }, undefined),
+                                await Options.removeOption(transaction, {
+                                      id: optionId
+                                    }, undefined),
+                                await Questions.removeQuestion(transaction, {
+                                      id: questionId
+                                    }, undefined),
+                                await Accounts.removeAccount(transaction, {
+                                      id: voterId
+                                    }, undefined)
+                              ];
+                      });
+                  tmp = id.length > 2;
+                } else {
+                  tmp = false;
+                }
+                Buntest.expect(tmp).toBe(true);
+              }));
+      }));
+
+Buntest.test("run unused selections CLI", (function () {
+        var res = Bun.spawnSync([
+              "npx",
+              "rescript-edgedb",
+              "unused-selections"
+            ]);
+        Buntest.expect(res.stdout.toString(undefined)).toMatchSnapshot();
       }));
 
 export {
